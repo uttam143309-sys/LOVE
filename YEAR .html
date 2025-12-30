@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Surprise for You</title>
+    <style>
+        :root { --bg: #120d16; --pink: #ff85a2; --text: #ffffff; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        .screen { position: absolute; text-align: center; transition: opacity 0.5s; width: 100%; }
+        .hidden { display: none; opacity: 0; }
+
+        /* Step 1: Tap & Hold */
+        #hold-circle { width: 100px; height: 100px; border: 4px solid #333; border-radius: 50%; margin: 20px auto; position: relative; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        #progress { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--pink); border-top-color: transparent; border-left-color: transparent; transform: rotate(-45deg); display: none; }
+        
+        /* Step 2: Card Swiping */
+        .card-container { position: relative; height: 250px; width: 200px; margin: 0 auto; }
+        .card { position: absolute; width: 100%; height: 100%; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.5s, opacity 0.5s; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .work { background: #ffcc80; color: #5d4037; z-index: 3; }
+        .stress { background: #90caf9; color: #0d47a1; z-index: 2; transform: rotate(-5deg); }
+        .gift { background: var(--pink); z-index: 1; }
+    </style>
+</head>
+<body>
+
+    <div id="screen1" class="screen">
+        <h2>A little surprise for you</h2>
+        <p>Before this year begins...</p>
+        <div id="hold-circle" onmousedown="startHold()" onmouseup="endHold()" ontouchstart="startHold()" ontouchend="endHold()">
+            <div id="progress"></div>
+            <span style="font-size: 30px;">❤️</span>
+        </div>
+        <p>Tap and hold</p>
+    </div>
+
+    <div id="screen2" class="screen hidden">
+        <h2>Something is waiting for you</h2>
+        <p>Move the distractions aside</p>
+        <div class="card-container">
+            <div class="card gift">🎁<br>Claim</div>
+            <div class="card stress" onclick="swipe(this)">Stress</div>
+            <div class="card work" onclick="swipe(this)">Work</div>
+        </div>
+    </div>
+
+    <script>
+        // Hold Logic
+        let holdTimer;
+        function startHold() {
+            document.getElementById('progress').style.display = 'block';
+            holdTimer = setTimeout(() => {
+                document.getElementById('screen1').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('screen1').style.display = 'none';
+                    document.getElementById('screen2').classList.remove('hidden');
+                }, 500);
+            }, 1500); // 1.5 seconds hold
+        }
+        function endHold() {
+            clearTimeout(holdTimer);
+            document.getElementById('progress').style.display = 'none';
+        }
+
+        // Swipe Logic
+        function swipe(el) {
+            el.style.transform = "translateX(300px) rotate(20deg)";
+            el.style.opacity = "0";
+            setTimeout(() => el.style.display = 'none', 500);
+        }
+    </script>
+</body>
+</html>
